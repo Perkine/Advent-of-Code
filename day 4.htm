@@ -1,0 +1,20 @@
+<script src="http://crypto-js.googlecode.com/svn/tags/3.0.2/build/rollups/md5.js"></script>
+<script>
+var key = 'yzbqklnj';
+
+function findHash(key, i, zeros){
+ var md5;
+ var string = new Array(zeros+1).join(0);
+ do{
+  md5 = CryptoJS.MD5(key + i++);
+ } while(!(md5.toString().substr(0, zeros) == string));
+
+ return {md5: md5, index: i};
+};
+
+var part1 = findHash(key, 0, 5);
+var part2 = findHash(key, part1.index, 6);
+
+console.log(part1.index, part2.index);
+
+</script>
