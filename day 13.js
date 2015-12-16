@@ -10,7 +10,7 @@ var part2 = calculateHappiness(data, true);
 console.log(part1, part2);
 
 function calculateHappiness(data, addSanta){
- data = flatten(data, addSanta);
+ data = buildData(data, addSanta);
  var people = Object.keys(data);
  var arrangements = permute(people);
 
@@ -33,7 +33,7 @@ function parse(value){
  return re.exec(value).slice(1);
 };
 
-function flatten(data, addSanta){
+function buildData(data, addSanta){
  var o = addSanta ? {Santa: {}} : {};
  data.forEach(function(value){
   if(!(value[0] in o)){

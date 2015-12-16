@@ -106,7 +106,7 @@ var index = wires.reduce(function(pos, wire, array, index){
  return wire.name == 'b' ? index : pos;
 }, -1);
 wires.splice(index, 1);
-new Wire('b', null, null, null, null, null, 16076);
+new Wire('b', null, null, null, null, null, getWire('a').value);
 
 wires.forEach(function(wire){wire.setValue.call(wire)});	// init
 console.log(getWire('a').value);
