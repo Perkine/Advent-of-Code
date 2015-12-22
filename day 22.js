@@ -21,11 +21,15 @@ var player = {hp: 50, mana: 500};
 var boss = {hp: 55, atk: 8};
 
 var minSpent = 9999;
+console.group();
 runTurn(player.hp, player.mana, boss.hp, 0, 0, 0, 1, 0);
 console.log('done', minSpent);
+console.groupEnd();
+console.group();
 var minSpent = 9999;
 runTurn(player.hp, player.mana, boss.hp, 0, 0, 0, 1, 0, true);
 console.log('done', minSpent);
+console.groupEnd();
 
 function runTurn(playerHP, playerMana, bossHP, shieldTimer, poisonTimer, rechargeTimer, turn, manaSpent, hardMode){
  function castSpell(spell, playerHP, playerMana, bossHP, shieldTimer, poisonTimer, rechargeTimer, turn, manaSpent){
@@ -60,7 +64,7 @@ function runTurn(playerHP, playerMana, bossHP, shieldTimer, poisonTimer, recharg
   if(bossHP > 0){
    runTurn(playerHP, playerMana, bossHP, shieldTimer, poisonTimer, rechargeTimer, turn+1, manaSpent, hardMode);
   } else{
-   console.log('Player wins, spent', manaSpent, 'mana, in', turn, 'turns')
+   console.log('Boss killed by '+ spell.name +'. Player wins, spent', manaSpent, 'mana, in', turn, 'turns')
    if(manaSpent < minSpent){
     minSpent = manaSpent;
    }
@@ -80,14 +84,24 @@ function runTurn(playerHP, playerMana, bossHP, shieldTimer, poisonTimer, recharg
   rechargeTimer--;
  }
 
- if(turn % 2){				// player turn
-  if(hardMode && (--playerHP < 1)){
+ if(turn % 2){/////////////////////////////////////////////////////////////////////////////////// player turn
+  if(hardMode && (--playerHP <= 0)){
+   return;
+  }
+  if(bossHP <= 0 && manaSpent < minSpent){
+   minSpent = manaSpent;
+   console.log('Boss killed by Poison. Player wins, spent', manaSpent, 'mana, in', turn, 'turns');
    return;
   }
   for(var i in spells){
    castSpell(spells[i], playerHP, playerMana, bossHP, shieldTimer, poisonTimer, rechargeTimer, turn, manaSpent);
   }
- } else {				// boss turn
+ } else {//////////////////////////////////////////////////////////////////////////////////////// boss turn
+  if(bossHP <= 0 && manaSpent < minSpent){
+   minSpent = manaSpent;
+   console.log('Boss killed by Poison. Player wins, spent', manaSpent, 'mana, in', turn, 'turns');
+   return;
+  }
   playerHP -= shieldTimer > 0 ? 1 : boss.atk;
   if(playerHP > 0){
    runTurn(playerHP, playerMana, bossHP, shieldTimer, poisonTimer, rechargeTimer, turn+1, manaSpent, hardMode);
